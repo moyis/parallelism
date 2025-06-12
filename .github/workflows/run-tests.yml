@@ -28,8 +28,11 @@ jobs:
           sed -n 's/.*Time elapsed: \([0-9.]*\) s.*/\1/p' |
           { read time; echo "TIME=$time"; } >> $GITHUB_OUTPUT
 
-      - name: Install redis-tools
+      - name: Install redis
         run: sudo apt-get update && sudo apt-get install -y redis-tools
 
-      - name: Check redis-cli version
-        run: redis-cli --version
+      - name: Connect to redis
+        run: redis-cli --tls -u ${{ secrets.REDIS_CONNECTION_STRING }}
+
+      - name: Write something
+        run: set hola mundo
