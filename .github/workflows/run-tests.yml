@@ -1,0 +1,32 @@
+on:
+  pull_request:
+
+name: Run Tests
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Build and Test
+        run: mvn test
+
+      - id: elapsed-time
+        name: Extract elapsed time
+        run: |
+          cat target/surefire-reports/dev.moyis.parallelism.FernetServiceTest.txt |
+          grep "Time elapsed:" |
+          sed -n 's/.*Time elapsed: \([0-9.]*\) s.*/\1/p' |
+          { read time; echo "TIME=$time"; } >> $GITHUB_OUTPUT
+
+      - name: Print elapsed time
+        run: echo "The elapsed time is ${{ steps.elapsed-time.outputs.TIME }}"
