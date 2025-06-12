@@ -18,3 +18,9 @@ jobs:
 
       - name: Build and Test
         run: mvn test
+
+      - name: Extract elapsed time
+        run: |
+          cat target/surefire-reports/dev.moyis.parallelism.FernetServiceTest.txt 
+          | grep "Time elapsed:"
+          | sed -n 's/.*Time elapsed: \([0-9.]*\) s.*/\1/p'
