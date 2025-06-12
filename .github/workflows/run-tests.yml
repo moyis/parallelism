@@ -15,6 +15,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+          cache: maven
 
       - name: Build and Test
         run: mvn test
@@ -25,7 +26,7 @@ jobs:
           cat target/surefire-reports/dev.moyis.parallelism.FernetServiceTest.txt |
           grep "Time elapsed:" |
           sed -n 's/.*Time elapsed: \([0-9.]*\) s.*/\1/p' |
-          { read time; echo "TIME=$time"; }
+          { read time; echo "TIME=$time"; } >> $GITHUB_OUTPUT
 
       - name: Print elapsed time
         run: echo "The elapsed time is ${{ steps.elapsed-time.outputs.TIME }}"
