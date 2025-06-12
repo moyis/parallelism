@@ -8,7 +8,6 @@ import dev.moyis.parallelism.model.InMemoryTrashCan;
 import dev.moyis.parallelism.model.InMemoryWorkstation;
 import dev.moyis.parallelism.model.Required;
 import java.util.Set;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

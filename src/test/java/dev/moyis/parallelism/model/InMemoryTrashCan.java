@@ -4,6 +4,7 @@ import java.time.Duration;
 
 public class InMemoryTrashCan implements TrashCan, Required {
   private boolean foundBottle = false;
+
   @Override
   public EmptyBottle searchEmptyBottle() {
     try {
@@ -18,6 +19,6 @@ public class InMemoryTrashCan implements TrashCan, Required {
 
   @Override
   public boolean executedAllSteps() {
-    return  foundBottle;
+    return foundBottle;
   }
 }
