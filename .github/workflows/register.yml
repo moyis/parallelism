@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+      - main
+
+name: Run Tests
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install redis
+        run: sudo apt-get update && sudo apt-get install -y redis-tools
+
+      - name: Register repository in Redis
+        env:
+          REDIS_URL: ${{ secrets.REDIS_CONNECTION_STRING }}
+          TIME: ${{ steps.elapsed-time.outputs.TIME }}
+          REPOSITORY_NAME: ${{ github.event.repository.name }}
+        run: |
+          redis-cli --tls -u "$REDIS_URL" SADD games $REPOSITORY_NAME
