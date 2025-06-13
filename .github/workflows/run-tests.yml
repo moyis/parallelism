@@ -7,11 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Test
     steps:
-      - name: Print GitHub context
-        run: echo "$GITHUB_CONTEXT"
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-
       - name: Checkout
         uses: actions/checkout@v4
 
