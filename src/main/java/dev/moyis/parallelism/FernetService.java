@@ -9,7 +9,7 @@ import dev.moyis.parallelism.model.GlassMadeOfBottle;
 import dev.moyis.parallelism.model.Ice;
 import dev.moyis.parallelism.model.TrashCan;
 import dev.moyis.parallelism.model.Workstation;
-
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -29,9 +29,17 @@ public class FernetService {
   }
 
   public FernetCola prepareFernetCola() {
-    var glassMadeOfBottle = createGlass();
-    var ingredients = getGetIngredients();
-    return workstation.prepareFernetCola(glassMadeOfBottle, ingredients.fernet(), ingredients.ice(), ingredients.cola());
+    try {
+      var glassMadeOfBottle = executor.submit(this::createGlass);
+      var ingredients = executor.submit(this::getGetIngredients);
+      return workstation.prepareFernetCola(
+          glassMadeOfBottle.get(),
+          ingredients.get().fernet(),
+          ingredients.get().ice(),
+          ingredients.get().cola());
+    } catch (ExecutionException | InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private Ingredients getGetIngredients() {
@@ -41,8 +49,7 @@ public class FernetService {
     return new Ingredients(fernet, ice, cola);
   }
 
-  private record Ingredients(Fernet fernet, Ice ice, Cola cola) {
-  }
+  private record Ingredients(Fernet fernet, Ice ice, Cola cola) {}
 
   private GlassMadeOfBottle createGlass() {
     var knife = drawer.getKnife();
