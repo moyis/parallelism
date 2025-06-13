@@ -1,9 +1,10 @@
 package dev.moyis.parallelism.model;
 
+import java.util.Optional;
+
 public interface Workstation {
 
-  GlassMadeOfBottle cutBottle(Knife knife, Lighter lighter, EmptyBottle emptyBottle);
+  FernetCup createFernetCup(Knife knife, Lighter lighter, EmptyBottle emptyBottle);
 
-  FernetCola prepareFernetCola(
-      GlassMadeOfBottle glassMadeOfBottle, Fernet fernet, Ice ice, Cola cola);
+  Optional<FernetCola> getFernetCola(FernetCup fernetCup);
 }

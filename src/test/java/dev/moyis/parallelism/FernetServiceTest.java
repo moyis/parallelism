@@ -23,7 +23,7 @@ class FernetServiceTest {
   public void preparesFernetCola() {
     var subject = aFernetService();
     var fernet = subject.prepareFernetCola();
-    assertThat(fernet).isNotNull();
+    assertThat(fernet).isNotEmpty();
     assertThat(requiredSteps).allMatch(Required::executedAllSteps);
   }
 

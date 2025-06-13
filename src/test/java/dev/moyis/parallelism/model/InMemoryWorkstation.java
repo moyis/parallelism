@@ -1,6 +1,7 @@
 package dev.moyis.parallelism.model;
 
 import java.time.Duration;
+import java.util.Optional;
 
 public class InMemoryWorkstation implements Workstation, Required {
 
@@ -8,34 +9,29 @@ public class InMemoryWorkstation implements Workstation, Required {
   private boolean preparedFernet = false;
 
   @Override
-  public GlassMadeOfBottle cutBottle(Knife knife, Lighter lighter, EmptyBottle emptyBottle) {
+  public FernetCup createFernetCup(Knife knife, Lighter lighter, EmptyBottle emptyBottle) {
     try {
       System.out.println("Start cutting bottle 🪚🍼");
       Thread.sleep(Duration.ofMillis(700));
       System.out.println("Burning border 🔥🍼");
       Thread.sleep(Duration.ofMillis(900));
       cutBottle = true;
-      return new GlassMadeOfBottle();
+      return new InMemoryFernetCup();
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
   }
 
   @Override
-  public FernetCola prepareFernetCola(
-      GlassMadeOfBottle glassMadeOfBottle, Fernet fernet, Ice ice, Cola cola) {
+  public Optional<FernetCola> getFernetCola(FernetCup fernetCup) {
+    if (!fernetCup.isReady()) {
+      return Optional.empty();
+    }
     try {
-      System.out.println("Putting ice in glass 🍼🧊");
-      Thread.sleep(Duration.ofMillis(300));
-      System.out.println("Pouring fernet 🍼🧊🌿");
-      Thread.sleep(Duration.ofMillis(200));
-      System.out.println("Pouring cola 🍼🧊🌿🥤");
-      Thread.sleep(Duration.ofMillis(200));
       System.out.println("Mixing with finger 👇🍼🧊🌿🥤");
-      Thread.sleep(Duration.ofMillis(100));
+      Thread.sleep(Duration.ofMillis(200));
       preparedFernet = true;
-      System.out.println("Fernet prepared! ✨🍼✨");
-      return new FernetCola();
+      return Optional.of(new FernetCola());
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
