@@ -35,6 +35,6 @@ jobs:
         env:
           REDIS_URL: ${{ secrets.REDIS_CONNECTION_STRING }}
           TIME: ${{ steps.elapsed-time.outputs.TIME }}
+          USER: "${{ github.event.pull_request.user.id }}-${{ github.event.pull_request.user.login }}"
         run: |
-          echo "Writing test time $TIME to Redis"
-          redis-cli --tls -u "$REDIS_URL" ZADD parallelism "$TIME" "${{ github.event.pull_request.user.id }}-${{ github.event.pull_request.user.login }}"
+          redis-cli --tls -u "$REDIS_URL" ZADD parallelism "$TIME" "$USER"
