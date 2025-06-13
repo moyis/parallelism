@@ -19,7 +19,7 @@ public class FernetService {
   private final TrashCan trashCan;
   private final Workstation workstation;
 
-  private ExecutorService executor = Executors.newFixedThreadPool(10);
+  private final ExecutorService executor = Executors.newFixedThreadPool(10);
 
   public FernetService(Drawer drawer, Fridge fridge, TrashCan trashCan, Workstation workstation) {
     this.drawer = drawer;
@@ -42,20 +42,19 @@ public class FernetService {
     }
   }
 
-  private Ingredients getGetIngredients() {
-    var fernet = fridge.getFernet();
-    var ice = fridge.getIce();
-    var cola = fridge.getCola();
-    return new Ingredients(fernet, ice, cola);
+  private Ingredients getGetIngredients() throws ExecutionException, InterruptedException {
+    var fernet = executor.submit(fridge::getFernet);
+    var ice = executor.submit(fridge::getIce);
+    var cola = executor.submit(fridge::getCola);
+    return new Ingredients(fernet.get(), ice.get(), cola.get());
   }
 
   private record Ingredients(Fernet fernet, Ice ice, Cola cola) {}
 
-  private GlassMadeOfBottle createGlass() {
-    var knife = drawer.getKnife();
-    var lighter = drawer.getLighter();
-    var emptyBottle = trashCan.searchEmptyBottle();
-    var glassMadeOfBottle = workstation.cutBottle(knife, lighter, emptyBottle);
-    return glassMadeOfBottle;
+  private GlassMadeOfBottle createGlass() throws ExecutionException, InterruptedException {
+    var knife = executor.submit(drawer::getKnife);
+    var lighter = executor.submit(drawer::getLighter);
+    var emptyBottle = executor.submit(trashCan::searchEmptyBottle);
+    return workstation.cutBottle(knife.get(), lighter.get(), emptyBottle.get());
   }
 }
